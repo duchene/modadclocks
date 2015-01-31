@@ -5,20 +5,20 @@ require(phangorn)
 multlik <- function(al){
 
 	if(class(al) != "DNAbin"){ al <- as.list(as.DNAbin(al)) } else { al <- as.list(al) }
-	mat <- as.character(al[[1]])
-	for(i in 2:length(al)){
-	      mat <- rbind(mat, as.character(al[[i]]))
+	mat <- as.character(as.list(as.matrix(al))[[1]])
+	for(i in 2:length(as.list(al))){
+	      mat <- rbind(mat, as.character(as.list(as.matrix(al))[[i]]))
 	}
 	al <- mat
 	nsites <- ncol(al)
 	usites <- unique(al, MARGIN = 2)
-	print(c(nsites, ncol(usites)))
-	liks <- vector()
+	liks <- 0
 	for(i in 1:ncol(usites)){
-	      insts <- ncol(al[, apply(al, 2, identical, usites[, i])])
-	      liks[i] <- (insts / nsites)^insts
+	      insts <- sum(apply(al, 2, identical, usites[, i]))
+	      
+	      liks <- liks + log((insts / nsites)^insts)
+	      #print(liks)
 	}
-	mlik <- log(prod(liks))
 
-	return(mlik)
+	return(liks)
 }

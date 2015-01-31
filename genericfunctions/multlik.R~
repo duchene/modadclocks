@@ -12,12 +12,12 @@ multlik <- function(al){
 	al <- mat
 	nsites <- ncol(al)
 	usites <- unique(al, MARGIN = 2)
+	print(c(nsites, ncol(usites)))
 	liks <- vector()
 	for(i in 1:ncol(usites)){
 	      insts <- ncol(al[, apply(al, 2, identical, usites[, i])])
 	      liks[i] <- (insts / nsites)^insts
 	}
-	print(head(liks))
 	mlik <- log(prod(liks))
 
 	return(mlik)
