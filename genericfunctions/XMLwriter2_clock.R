@@ -93,7 +93,7 @@ b7 <- "<distribution id=\"likelihood\" spec=\"util.CompoundDistribution\">
                     <parameter estimate=\"true\" id=\"mutationRate.s:simulationduchene\" name=\"mutationRate\">1.0</parameter>
                     <substModel id=\"JC69.s:simulationduchene\" spec=\"JukesCantor\"/>
                 </siteModel>
-                <branchRateModel clock.rate=\"@clockRate.c:simulationduchene\" spec=\"beast.evolution.branchratemodel.StrictClockModel\">
+                <branchRateModel clock.rate=\"@clockRate.c:simulationduchene\" spec=\"beast.evolution.branchratemodel.StrictClockModel\"/>
             </distribution>
         </distribution>
     </distribution>
@@ -128,7 +128,7 @@ b9 <- c(b9, "<log idref=\"posterior\"/>
         <log id=\"TreeHeight.t:simulationduchene\" spec=\"beast.evolution.tree.TreeHeightLogger\" tree=\"@Tree.t:simulationduchene\"/>
         <log idref=\"YuleModel.t:simulationduchene\"/>
         <parameter idref=\"birthRate.t:simulationduchene\" name=\"log\"/>
-        <parameter idref=\"clockRate.c:simulationduchene" name=\"log\"/>
+        <parameter idref=\"clockRate.c:simulationduchene\" name=\"log\"/>
 ")
 
 cals <- vector()
@@ -146,7 +146,7 @@ b10 <- "<logger id=\"screenlog\" logEvery=\"100\">
     </logger>
 
     <logger fileName=\"$(tree).trees\" id=\"treelog.t:simulationduchene\" logEvery=\"100\" mode=\"tree\">
-        <log branchratemodel=\"@clockRate.c:simulationduchene\" id=\"TreeWithMetaDataLogger.t:simulationduchene\" spec=\"beast.evolution.tree.TreeWithMetaDataLogger\" tree=\"@Tree.t:simulationduchene\"/>
+        <log id=\"TreeWithMetaDataLogger.t:simulationduchene\" spec=\"beast.evolution.tree.TreeWithMetaDataLogger\" tree=\"@Tree.t:simulationduchene\"/>
     </logger>
 
 </run>
