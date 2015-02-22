@@ -12,8 +12,6 @@ fix_tree_topology <- function(xml_path, input_tree, output_name){
 	print('read xml file') 
   }
 
-  # f_name is the file name. This sholud match the alignment name in the xml file. For example turtles.xml should contain the element with id
-  # Tree.t:turtles in the xml.
   f_name = gsub('[.]xml', '', xml_path)
 
   rand_start_lines <- grep('(<init id=\"RandomTree)|</init>', raw_lines)
@@ -27,6 +25,11 @@ fix_tree_topology <- function(xml_path, input_tree, output_name){
   tree_block <- paste0('<tree id=\"Tree.t:', f_name,'\" spec=\"beast.util.TreeParser\" newick=\"', input_tree, '\" taxa=\"@', f_name, '\" IsLabelledNewick=\"true\"/>')
 
   raw_lines <- c(raw_lines[1:(fix_tree_location-1)], tree_block, raw_lines[fix_tree_location:length(raw_lines)])
+
+  # Remove operators
+  ops_lines <- grep('WilsonBalding|SubtreeSlide|narrow[.]t|wide[.]t', raw_lines)
+  raw_lines[ops_lines] <- ''
+
 
   if(missing(output_name)){
 	output_name <- 'test_insert_tree.xml'
