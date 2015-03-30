@@ -40,7 +40,9 @@ b4 <- "<run chainLength=\"20000000\" id=\"mcmc\" spec=\"MCMC\">
     <state id=\"state\" storeEvery=\"2000\">
         <input name=\'stateNode\' idref=\'Tree.t:simulationduchene\'/>
         <parameter id=\"birthRate.t:simulationduchene\" name=\"stateNode\">1.0</parameter>
-        <parameter id=\"clockRate.c:simulationduchene\" name=\"stateNode\">1.0</parameter>
+        <stateNode dimension=\"114\" id=\"Indicators.c:simulationduchene\" spec=\"parameter.BooleanParameter\">true</stateNode>
+	<parameter dimension=\"114\" id=\"clockrates.c:simulationduchene\" name=\"stateNode\">1.0</parameter>
+        <parameter id=\"meanClockRate.c:simulationduchene\" name=\"stateNode\">1.0</parameter>
     </state>
 "
 
@@ -52,9 +54,6 @@ b5 <- "<distribution id=\"posterior\" spec=\"util.CompoundDistribution\">
             <prior id=\"YuleBirthRatePrior.t:simulationduchene\" name=\"distribution\" x=\"@birthRate.t:simulationduchene\">
                 <Uniform id=\"Uniform.0\" name=\"distr\" upper=\"Infinity\"/>
             </prior>
-            <prior id=\"ClockPrior.c:simulationduchene\" name=\"distribution\" x=\"@clockRate.c:simulationduchene\">
-	    	   <Uniform id=\"Uniform.0.1\" name=\"distr\" upper=\"Infinity\"/>
-	    </prior>
 "
 
 # BLOCK6 - Prior 2 - Calibrations
@@ -92,7 +91,7 @@ b7 <- "<distribution id=\"likelihood\" spec=\"util.CompoundDistribution\">
                     <parameter estimate=\"true\" id=\"mutationRate.s:simulationduchene\" name=\"mutationRate\">1.0</parameter>
                     <substModel id=\"JC69.s:simulationduchene\" spec=\"JukesCantor\"/>
                 </siteModel>
-                <branchRateModel clock.rate=\"@clockRate.c:simulationduchene\" spec=\"beast.evolution.branchratemodel.StrictClockModel\"/>
+                <branchRateModel clock.rate=\"@meanClockRate.c:simulationduchene\" id=\"RandomLocalClock.c:simulationduchene\" indicators=\"@Indicators.c:simulationduchene\" rates=\"@clockrates.c:simulationduchene\" spec=\"beast.evolution.branchratemodel.RandomLocalClockModel\" tree=\"@Tree.t:simulationduchene\"/>
             </distribution>
         </distribution>
     </distribution>
@@ -108,11 +107,15 @@ b8 <- "<operator id=\"YuleBirthRateScaler.t:simulationduchene\" parameter=\"@bir
 
     <operator id=\"UniformOperator.t:simulationduchene\" spec=\"Uniform\" tree=\"@Tree.t:simulationduchene\" weight=\"30.0\"/>
     
-    <operator id=\"strictClockRateScaler.c:simulationduchene\" parameter=\"@clockRate.c:simulationduchene\" scaleFactor=\"0.7\" spec=\"ScaleOperator\" weight=\"3.0\"/>
+    <operator id=\"IndicatorsBitFlip.c:simulationduchene\" parameter=\"@Indicators.c:simulationduchene\" spec=\"BitFlipOperator\" weight=\"15.0\"/>
 
-    <operator id=\"strictClockUpDownOperator.c:simulationduchene\" scaleFactor=\"0.75\" spec=\"UpDownOperator\" weight=\"3.0\">
-    	      <parameter idref=\"clockRate.c:simulationduchene\" name=\"up\"/>
-	      <tree idref=\"Tree.t:simulationduchene\" name=\"down\"/>
+    <operator id=\"ClockRateScaler.c:simulationduchene\" parameter=\"@clockrates.c:simulationduchene\" scaleFactor=\"0.5\" spec=\"ScaleOperator\" weight=\"15.0\"/>
+
+    <operator id=\"randomClockScaler.c:simulationduchene\" parameter=\"@meanClockRate.c:simulationduchene\" scaleFactor=\"0.5\" spec=\"ScaleOperator\" weight=\"1.0\"/>
+
+    <operator id=\"randomClockUpDownOperator.c:simulationduchene\" scaleFactor=\"0.75\" spec=\"UpDownOperator\" weight=\"3.0\">
+        <parameter idref=\"meanClockRate.c:simulationduchene\" name=\"up\"/>
+        <tree idref=\"Tree.t:simulationduchene\" name=\"down\"/>
     </operator>
 "
 
@@ -127,7 +130,9 @@ b9 <- c(b9, "<log idref=\"posterior\"/>
         <log id=\"TreeHeight.t:simulationduchene\" spec=\"beast.evolution.tree.TreeHeightLogger\" tree=\"@Tree.t:simulationduchene\"/>
         <log idref=\"YuleModel.t:simulationduchene\"/>
         <parameter idref=\"birthRate.t:simulationduchene\" name=\"log\"/>
-        <parameter idref=\"clockRate.c:simulationduchene\" name=\"log\"/>
+	<log idref=\"Indicators.c:simulationduchene\"/>
+        <parameter idref=\"clockrates.c:simulationduchene\" name=\"log\"/>
+        <parameter idref=\"meanClockRate.c:simulationduchene\" name=\"log\"/>
 ")
 
 cals <- vector()
@@ -145,7 +150,7 @@ b10 <- "<logger id=\"screenlog\" logEvery=\"2000\">
     </logger>
 
     <logger fileName=\"$(tree).trees\" id=\"treelog.t:simulationduchene\" logEvery=\"2000\" mode=\"tree\">
-        <log id=\"TreeWithMetaDataLogger.t:simulationduchene\" spec=\"beast.evolution.tree.TreeWithMetaDataLogger\" tree=\"@Tree.t:simulationduchene\"/>
+        <log branchratemodel=\"@RandomLocalClock.c:simulationduchene\" id=\"TreeWithMetaDataLogger.t:simulationduchene\" spec=\"beast.evolution.tree.TreeWithMetaDataLogger\" tree=\"@Tree.t:simulationduchene\"/>
     </logger>
 
 </run>

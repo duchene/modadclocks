@@ -1,6 +1,6 @@
 # This function takes posterior log and trees files and simulates rates thorugh each of the posterior trees using the model parameters from the corresponding line in the log file.
 
-simPhylogs <- function(treesf, logdat, N = 100, subsmod = "JC", l = 1000, sample = T, ratogindir = T){
+simPhylogsBL <- function(treesf, logdat, N = 100, subsmod = "JC", l = 1000, sample = T, ratogindir = T){
 	
 	trees <- read.nexus(treesf)
 	logdat <- read.table(logdat, header = T, comment = "#", sep = ",")
@@ -8,12 +8,23 @@ simPhylogs <- function(treesf, logdat, N = 100, subsmod = "JC", l = 1000, sample
 	trees <- trees[samp]
 	logdat <- logdat[samp,]
 	sim <- list()
+	if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
+	if(ratogindir == T){
+	      ratogs <- read.nexus("ratogs.tree")[samp]
+	} else {
+	      getRatogB(treesf)
+	      ratogs <- read.nexus("ratogs.tree")[samp]
+	}
+	}
 	for(i in 1:nrow(logdat)){
 	      tr <- trees[[i]]
 	      if("clockRate" %in% colnames(logdat)){
-	      	     sim[[i]] <- simulate.clock(tr, params = list(rate = logdat[i, "clockRate"], noise = 0.000001))
-	      } else if("ucldMean" %in% colnames(logdat)){
-	      	     sim[[i]] <- simulate.uncor.lnorm(tr, params = list(mean.log = log(logdat[i, "ucldMean"]), sd.log = logdat[i, "ucldStdev"]))
+	      	     tr$edge.length <- tr$edge.length * logdat[i, "clockRate"]
+		     sim[[i]] <- list(phylogram = tr)
+	      } else if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
+	      	     trr <- ratogs[[i]]
+		     trr$edge.length <- trr$edge.length * tr$edge.length
+	      	     sim[[i]] <- list(phylogram = trr)
 	      }
 	      
 	      if(subsmod == "JC"){

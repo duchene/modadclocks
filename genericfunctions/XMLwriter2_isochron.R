@@ -1,4 +1,3 @@
-
 get.xml2 <- function(cal.data, sim.data, file.name = "sim"){
 
 # BLOCK1 - Header
@@ -37,8 +36,8 @@ b3 <- c(b3, paste0("<tree id=\"Tree.t:simulationduchene\" spec=\'beast.util.Tree
 
 # BLOCK4 - State and population model
 
-b4 <- "<run chainLength=\"1000000\" id=\"mcmc\" spec=\"MCMC\">
-    <state id=\"state\" storeEvery=\"100\">
+b4 <- "<run chainLength=\"20000000\" id=\"mcmc\" spec=\"MCMC\">
+    <state id=\"state\" storeEvery=\"2000\">
         <input name=\'stateNode\' idref=\'Tree.t:simulationduchene\'/>
         <parameter id=\"birthRate.t:simulationduchene\" name=\"stateNode\">1.0</parameter>
         <parameter id=\"ucldStdev.c:simulationduchene\" lower=\"0.0\" name=\"stateNode\" upper=\"5.0\">0.5</parameter>
@@ -86,7 +85,7 @@ for(i in 1:length(cal.data)){
     		cal.block2 <- c(cal.block2, paste0("<taxon id=\"", cal.data[[i]][[2]][j], "\" spec=\"Taxon\"/>"))
     	}
     }
-    cal.block3 <- c("</taxonset>", paste0("<Normal id=\"Normal.0", i, "\" name=\"distr\">"), paste0("<parameter estimate=\"true\" id=\"RealParameter.a", i, "\" name=\"mean\">", round(cal.data[[i]][[1]], 3), "</parameter>"), paste0("<parameter estimate=\"true\" id=\"RealParameter.b", i, "\" name=\"sigma\">", round((cal.data[[i]][[1]] / 10), 5), "</parameter>"), "</Normal>", "</distribution>")
+    cal.block3 <- c("</taxonset>", paste0("<Normal id=\"Normal.0", i, "\" name=\"distr\">"), paste0("<parameter estimate=\"true\" id=\"RealParameter.a", i, "\" name=\"mean\">", round(cal.data[[i]][[1]], 3), "</parameter>"), paste0("<parameter estimate=\"true\" id=\"RealParameter.b", i, "\" name=\"sigma\">", round((cal.data[[i]][[1]] / 10000), 5), "</parameter>"), "</Normal>", "</distribution>")
     b6 <- c(b6, cal.block1, cal.block2, cal.block3)
 }
 
@@ -138,7 +137,7 @@ b8 <- "<operator id=\"YuleBirthRateScaler.t:simulationduchene\" parameter=\"@bir
 
 # BLOCK 9 - Loggers
 
-b9 <- paste0("<logger fileName=\"", file.name, ".log\" id=\"tracelog\" logEvery=\"100\" model=\"@posterior\" sanitiseHeaders=\"true\" sort=\"smart\">")
+b9 <- paste0("<logger fileName=\"", file.name, ".log\" id=\"tracelog\" logEvery=\"2000\" model=\"@posterior\" sanitiseHeaders=\"true\" sort=\"smart\">")
 
 b9 <- c(b9, "<log idref=\"posterior\"/>
         <log idref=\"likelihood\"/>
@@ -159,14 +158,14 @@ for(i in 1:length(cal.data)){
 
 b9 <- c(b9, cals, "</logger>")
 
-b10 <- "<logger id=\"screenlog\" logEvery=\"100\">
+b10 <- "<logger id=\"screenlog\" logEvery=\"2000\">
         <log idref=\"posterior\"/>
         <log arg=\"@posterior\" id=\"ESS.0\" spec=\"util.ESS\"/>
         <log idref=\"likelihood\"/>
         <log idref=\"prior\"/>
     </logger>
 
-    <logger fileName=\"$(tree).trees\" id=\"treelog.t:simulationduchene\" logEvery=\"100\" mode=\"tree\">
+    <logger fileName=\"$(tree).trees\" id=\"treelog.t:simulationduchene\" logEvery=\"2000\" mode=\"tree\">
         <log branchratemodel=\"@RelaxedClock.c:simulationduchene\" id=\"TreeWithMetaDataLogger.t:simulationduchene\" spec=\"beast.evolution.tree.TreeWithMetaDataLogger\" tree=\"@Tree.t:simulationduchene\"/>
     </logger>
 

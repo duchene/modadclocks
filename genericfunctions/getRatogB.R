@@ -2,7 +2,7 @@
 
 require(phangorn)
 
-getRatogB <- function(trees, out.file = "ratogs.nex"){
+getRatogB <- function(trees, out.file = "ratogs.tree"){
 
 	  trs <- readLines(trees)
 
