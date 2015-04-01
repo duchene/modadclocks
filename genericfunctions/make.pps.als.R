@@ -1,6 +1,6 @@
 # This function takes posterior log and trees files and simulates rates thorugh each of the posterior trees using the model parameters from the corresponding line in the log file.
 
-simPhylogsBL <- function(treesf, logdat, N = 100, subsmod = "JC", l = 1000, sample = T, ratogindir = T){
+simPhylogsBL <- function(treesf, logdat, N = 100, l = 1000, sample = T, ratogindir = T){
 	
 	trees <- read.nexus(treesf)
 	logdat <- read.table(logdat, header = T, comment = "#", sep = ",")
@@ -27,11 +27,20 @@ simPhylogsBL <- function(treesf, logdat, N = 100, subsmod = "JC", l = 1000, samp
 	      	     sim[[i]] <- list(phylogram = trr)
 	      }
 	      
-	      if(subsmod == "JC"){
-	      	     sim[[i]][[3]] <- simSeq(sim[[i]][[1]], l = l)
-	      } else if(subsmod == "GTR"){
-	      	     
+	      
+	      if(all(c("rateAC", "rateAG", "rateAT", "rateCG", "rateGT") %in% colnames(logdat))){
+	      	     print("The substitution model is GTR")
+		     
+		     
 	      	     sim[[i]][[3]] <- simSeq(sim[[i]][[1]], Q = , bf = , l = l)
+		     
+	      } else if("kappa" %in% colnames(logdat)){
+		     print("The substitution model is HKY")
+		     
+		     
+	      } else { 
+	      	     print("The substitution model is assumed to be JC")
+	      	     sim[[i]][[3]] <- simSeq(sim[[i]][[1]], l = l)
 	      }
 
 	}

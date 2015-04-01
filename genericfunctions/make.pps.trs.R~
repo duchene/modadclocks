@@ -1,18 +1,8 @@
-# This function takes a chronogram and a phylogram, re-roots the phylogram appropriately, and returns both ladderized.
 
-rootnlad <- function(chron, phyl){
 
-	 rootnode <- length(chron$tip.label) + 1
-	 outgr <- chron$tip.label[Descendants(chron, Descendants(chron, rootnode, "children")[1], "tips")[[1]]]
-	 chron <- ladderize(root(chron, outgroup = outgr))
-	 phyl <- ladderize(root(phyl, outgroup = outgr))
-	 
-	 return(list(chron, phyl))
-}
+# This function processes simulated datasets created with the function makeppsims.R by taking posterior phylograms and simulated alignmetns, and creating posterior predictive simulated phylograms for each.
 
-# This function processes simulated datasets created with the function simPhylogsBL.R by taking posterior phylograms and simulated alignmetns, and creating posterior predictive simulated phylograms for each.
-
-prepsimsBL <- function(sims, empdat, chron, writedat = F){
+makepps.tr <- function(sims, empdat, chron, writedat = F){
 	 empdat <- as.phyDat(as.DNAbin(read.nexus.data(empdat)))
 	 topo <- read.tree(chron)
 	 topo$edge.length <- rep(1, length(topo$edge.length))
