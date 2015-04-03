@@ -1,6 +1,6 @@
 # This function takes posterior log and trees files and simulates rates thorugh each of the posterior trees using the model parameters from the corresponding line in the log file.
 
-simPhylogsBL <- function(treesf, logdat, N = 100, l = 1000, sample = T, ratogindir = T){
+make.pps.als <- function(treesf, logdat, N = 100, l = 1000, ratogindir = T){
 	
 	trees <- read.nexus(treesf)
 	logdat <- read.table(logdat, header = T, comment = "#", sep = ",")
@@ -14,6 +14,7 @@ simPhylogsBL <- function(treesf, logdat, N = 100, l = 1000, sample = T, ratogind
 	} else {
 	      getRatogB(treesf)
 	      ratogs <- read.nexus("ratogs.tree")[samp]
+	      write.tree(ratogs, file = "ratogs.tree")
 	}
 	}
 	for(i in 1:nrow(logdat)){

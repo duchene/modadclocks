@@ -11,14 +11,8 @@ multlik <- function(al){
 	}
 	al <- mat
 	nsites <- ncol(al)
-	usites <- unique(al, MARGIN = 2)
-	liks <- 0
-	for(i in 1:ncol(usites)){
-	      insts <- sum(apply(al, 2, identical, usites[, i]))
-	      
-	      liks <- liks + log((insts / nsites)^insts)
-	      #print(liks)
-	}
+	al_patterns <- table(sapply(1:nsites, function(x) paste(al[, x], collapse = '')))
+	lik <- sum(sapply(al_patterns, function(x) (log(x) * x))) - (nsites*log(nsites))
 
-	return(liks)
+	return(lik)
 }
