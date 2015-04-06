@@ -1,21 +1,15 @@
-# This function takes posterior log and trees files and simulates rates thorugh each of the posterior trees using the model parameters from the corresponding line in the log file.
+# This function takes posterior log and trees files. It first simulates rates thorugh each of the posterior trees and then alignments using the model parameters from the corresponding line in the log file. This function also requires the length of the alignment.
 
-make.pps.als <- function(treesf, logdat, N = 100, l = 1000, ratogindir = T){
+make.pps.als <- function(trees.file, log.file, N = 100, l = 1000){
 	
-	trees <- read.nexus(treesf)
-	logdat <- read.table(logdat, header = T, comment = "#", sep = ",")
-	samp <- sample(1:length(trees), N)
+	trees <- read.nexus(trees.file)
+	logdat <- read.table(log.file, header = T, comment = "#", sep = ",")
+	samp <- sample(1:length(trees.file), N)
 	trees <- trees[samp]
 	logdat <- logdat[samp,]
 	sim <- list()
 	if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
-	if(ratogindir == T){
-	      ratogs <- read.nexus("ratogs.tree")[samp]
-	} else {
-	      getRatogB(treesf)
-	      ratogs <- read.nexus("ratogs.tree")[samp]
-	      write.tree(ratogs, file = "ratogs.tree")
-	}
+	      ratogs <- getRatogs(trees.file)[samp]
 	}
 	for(i in 1:nrow(logdat)){
 	      tr <- trees[[i]]
@@ -30,17 +24,37 @@ make.pps.als <- function(treesf, logdat, N = 100, l = 1000, ratogindir = T){
 	      
 	      
 	      if(all(c("rateAC", "rateAG", "rateAT", "rateCG", "rateGT") %in% colnames(logdat))){
-	      	     print("The substitution model is GTR")
-		     
-		     
-	      	     sim[[i]][[3]] <- simSeq(sim[[i]][[1]], Q = , bf = , l = l)
+	      	     #print("The substitution model is GTR")
+		     row1 <- c(logdat$rateAC[i], logdat$rateAG[i], logdat$rateAT[i]); row1 <- c(-sum(row1), row1)
+		     row2 <- c(logdat$rateAC[i], logdat$rateCG[i], 1); row2 <- c(row2[1], -sum(row2), row2[2:3])
+		     row3 <- c(logdat$rateAG[i], logdat$rateCG[i], logdat$rateGT[i]); row3 <- c(row3[1:2], -sum(row3), row3[3])
+		     row4 <- c(logdat$rateAT[i], 1, logdat$rateGT[i]); row4 <- c(row4, -sum(row4))
+		     qmat <- rbind(row1, row2, row3, row4)
+
+		     if("gammaShape" %in% colnames(logdat)){
+		     	   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
+        		   sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4), rate = r))
+        		   sim[[i]][[3]] <- c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]])
+		     } else {		    
+	      	       	   sim[[i]][[3]] <- simSeq(sim[[i]][[1]], Q = qmat, bf = c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4), l = l)
+		     }		     
 		     
 	      } else if("kappa" %in% colnames(logdat)){
-		     print("The substitution model is HKY")
+		     #print("The substitution model is HKY")
 		     
+
+		     qmat <- 
+
+		     if("gammaShape" %in% colnames(logdat)){
+		     		     	     rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
+        				                sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4), rate = r))
+                           sim[[i]][[3]] <- c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]])
+		     } else {
+                           sim[[i]][[3]] <- simSeq(sim[[i]][[1]], Q = qmat, bf = c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4), l = l)
+	       			            }
 		     
 	      } else { 
-	      	     print("The substitution model is assumed to be JC")
+	      	     #print("The substitution model is assumed to be JC")
 	      	     sim[[i]][[3]] <- simSeq(sim[[i]][[1]], l = l)
 	      }
 
