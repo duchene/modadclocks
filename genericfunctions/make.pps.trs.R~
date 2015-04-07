@@ -1,6 +1,7 @@
 # This function processes simulated datasets created with the function make.pps.als. It takes the posterior phylograms and simulated alignments. The function creates the posterior predictive simulated distribution of phylograms. this function also requires the empirical dataset and the assumed topology.
 
-make.pps.tr <- function(sims, empdat, topo){
+make.pps.tr <- function(sims, empdat.file, topo){
+	 empdat <- as.phyDat(as.DNAbin(read.nexus.data(empdat.file)))
 	 topo$edge.length <- rep(1, length(topo$edge.length))
 	 emphy <- optim.pml(pml(topo, empdat))
 	 empmlik <- multlik(empdat)
