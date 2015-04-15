@@ -3,8 +3,8 @@
 make.pps.als <- function(trees.file, log.file, N = 100, l = 1000){
 	
 	trees <- read.nexus(trees.file)
-	logdat <- read.table(log.file, header = T, comment = "#", sep = ",")
-	samp <- sample(1:length(trees.file), N)
+	logdat <- read.table(log.file, header = T, comment = "#")
+	samp <- sample(1:length(trees), N)
 	trees <- trees[samp]
 	logdat <- logdat[samp,]
 	sim <- list()
@@ -26,8 +26,10 @@ make.pps.als <- function(trees.file, log.file, N = 100, l = 1000){
 	      if(all(c("rateAC", "rateAG", "rateAT", "rateCG", "rateGT") %in% colnames(logdat))){
 	      	     # GENERAL TIME REVERSIBLE (GTR)
 		     #print("The substitution model is GTR")
-		     basef <- c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4)
+		     basef <- c(logdat$freqParameter.1[i], logdat$freqParameter.2[i], logdat$freqParameter.3[i], logdat$freqParameter.4[i])
 		     qmat <- c(logdat$rateAC[i], logdat$rateAG[i], logdat$rateAT[i], logdat$rateCG[i], 1, logdat$rateGT[i])
+		     print(basef)
+		     print(qmat)
 
 		     if("gammaShape" %in% colnames(logdat)){
 		     	   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
@@ -40,7 +42,7 @@ make.pps.als <- function(trees.file, log.file, N = 100, l = 1000){
 	      } else if("kappa" %in% colnames(logdat)){
 		     # HASEGAWA-KISHINO-YANO (HKY)
 		     #print("The substitution model is HKY")
-		     basef <- c(logdat$freqParameter.1, logdat$freqParameter.2, logdat$freqParameter.3, logdat$freqParameter.4)
+		     basef <- c(logdat$freqParameter.1[i], logdat$freqParameter.2[i], logdat$freqParameter.3[i], logdat$freqParameter.4[i])
 		     qmat <- c(1, 2*logdat$kappa[i], 1, 1, 2*logdat$kappa[i], 1)
 
 		     if("gammaShape" %in% colnames(logdat)){
