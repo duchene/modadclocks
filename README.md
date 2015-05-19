@@ -40,18 +40,21 @@ Next, we set the directory to example_run_and_results, and run the function adeq
 ```coffee
 setwd("../example_run_and_results")
 clock_adequacy_example <- adeq("sim.trees", "sim.log", "al.nex", 100)
+names(clock_adequacy_example)
 ```
 
-You can examine the clock_adequacy_example object. It should have the same contents as object "allres" in the file results.Rdata:
+The elements in clock_adequacy_example are each of the components that can be used to assess clock and substitution model adequacy (this assessment of substitution model adequacy is sensitive to rate variation among lineages, so the assessment from a clock free analysis, e.g. from MrBayes, is more appropriate). 
+
+The clock_adequacy_example object should have the same contents as object "allres" in the file results.Rdata:
 
 ```coffee
 load("results.Rdata")
+names(allres)
 ```
 
 The following section uses the results from results.Rdata to produce a variety of useful graphics.
 
 Graphical examples of results
 -----------------------------
-
-
+It is strongly recommended to use qualitative checks of models using graphical analyses. This section uses the results in example_run_and_results/results.Rdata to graph different components for assessing clock model adequacy using posterior predictive simulations.
 
