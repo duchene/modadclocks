@@ -1,7 +1,7 @@
 This repository was made to accompany the article 'Evaluating the adequacy of molecular-clock models using posterior predictive simulations'
 ============================================================================================================================================
 
-David Duchene and Sebastian Duchene
+This repository was contributed by David Duchene and Sebastian Duchene
 
 david.duchene[at]anu.edu.au
 
@@ -21,6 +21,16 @@ The following are a set of examples of how to use the functions and how to prese
 
 Example of usage
 ----------------
+In the folder example_run_and_results you will find a simulated genetic alignment with 2000 base pairs in nexus format (al.nex) and chronogram in newick format (chrono.tre) with 50 taxa. The alignment was simulated along the chronogram under a Jukes-Cantor substitution model and with rate auto-correlation among lineages. You will also find an XML file to run BEAST 2 under a strict clock and a Jukes-Cantor model of substitution and a root calibration.
+
+In this folder we also include the output log and tree files from BEAST 2, and the results from assessing clock and substitution model adquacy using the functions in the folder clock_modad.
+
+The following is a simple example code to run and save the results for clock model adequacy after the BEAST 2 run has completed:
+
+
+
+
+
 
 
 
