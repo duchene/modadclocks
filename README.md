@@ -58,3 +58,21 @@ Graphical examples of results
 -----------------------------
 It is strongly recommended to use qualitative checks of models using graphical analyses. This section uses the results in example_run_and_results/results.Rdata to graph different components for assessing clock model adequacy using posterior predictive simulations.
 
+The following script shows a simple example to explore the branch wise posterior predictive p-values. It requires to have the tree loaded. In this case we will use the original simulated tree, but ususally the tree with the median posterior branching times would be appropriate.
+
+```coffee
+tr <- read.tree("chrono.tre")
+plot(tr, edge.col = rainbow(length(allres$branch_wise_pppvalues), start = 2/6, end = 4/6)[rank(allres$branch_wise_pppvalues)], edge.width = 6, cex = 1.5)
+edgelabels(allres$branch_wise_pppvalues, bg = "white", cex = 1.5, frame = "none")
+```
+
+![plot of chunk fig1_branchwise_p.jpg](figures/fig1_branchwise_p.jpg)
+
+The following script shows a simple example to explore the branch wise length deviation, which is another metric for accuracy.
+
+```coffee
+plot(tr, edge.col = rainbow(length(allres$branch_length_deviation), start = 4/6, end = 2/6)[rank(allres$branch_length_deviation)], edge.width = 6, cex = 1.5)
+edgelabels(round(allres$branch_length_deviation, 2), bg = "white", cex = 1.5, frame = "none")
+```
+
+![plot of chunk fig2_branchwise_p.jpg](figures/fig2_branchwise_p.jpg)
