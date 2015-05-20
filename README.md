@@ -22,7 +22,7 @@ All the code and examples are for R. The code requires the that the R packages a
 
 Example of usage
 ----------------
-In the folder example_run_and_results you will find a simulated genetic alignment with 2000 base pairs in nexus format (al.nex) and chronogram in newick format (chrono.tre) with 50 taxa. The alignment was simulated along the chronogram under a Jukes-Cantor substitution model and with rate auto-correlation among lineages. You will also find an XML file to run BEAST 2 under a strict clock and a Jukes-Cantor model of substitution and a root calibration.
+In the folder example_run_and_results you will find a simulated sequence alignment with 2000 nucleotides in nexus format (al.nex) and chronogram in newick format (chrono.tre) with 50 taxa. The alignment was simulated along the chronogram under a Jukes-Cantor substitution model and with rate auto-correlation among lineages. You will also find an XML file to run BEAST 2 under a strict clock and a Jukes-Cantor model of substitution and a root calibration.
 
 In this folder we also include the output log and tree files from BEAST 2, and the results from assessing clock and substitution model adquacy using the functions in the folder clock_modad.
 
@@ -32,7 +32,7 @@ Begin by opening R. The follwing will set the working directory to clock_modad i
 
 ```coffee
 setwd("[INSERT THE PATH TO clock_modad]")
-for(i in dir) source(i)
+for(i in dir()) source(i)
 ```
 
 Next, we set the directory to example_run_and_results, and run the function adeq(). This arguments for this function are the posterior of trees in nexus format, the log file, the alignment in nexus format, and the number of posterior predictive simulations to be performed.
