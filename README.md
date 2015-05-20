@@ -58,7 +58,7 @@ Graphical examples of results
 -----------------------------
 It is strongly recommended to use qualitative checks of models using graphical analyses. This section uses the results in example_run_and_results/results.Rdata to graph different components for assessing clock model adequacy using posterior predictive simulations.
 
-The following script shows a simple example to explore the branch wise posterior predictive p-values. It requires to have the tree loaded. In this case we will use the original simulated tree, but ususally the tree with the median posterior branching times would be appropriate.
+The following script shows a simple example to explore the branch wise posterior predictive p-values. It requires to have the tree loaded. In this case we will use the original simulated tree, but ususally the tree with the median posterior branching times would be appropriate. In blue we will colour the branches with good accuracy, and in green the branches that have poor accuracy.
 
 ```coffee
 tr <- read.tree("chrono.tre")
@@ -68,7 +68,7 @@ edgelabels(allres$branch_wise_pppvalues, bg = "white", cex = 1.5, frame = "none"
 
 ![plot of chunk fig1_branchwise_p.jpg](figures/fig1_branchwise_p.jpg)
 
-The following script shows a simple example to explore the branch wise length deviation, which is another metric for accuracy.
+The following script shows a simple example to explore the branch wise length deviation, which is another metric for accuracy. We apply the same colouring system as the plot above, but note that in the case of branch length deviation larger numbers indicate greater deviation from the empirical branch length, and therefore lower accuracy.
 
 ```coffee
 plot(tr, edge.col = rainbow(length(allres$branch_length_deviation), start = 4/6, end = 2/6)[rank(allres$branch_length_deviation)], edge.width = 6, cex = 1.5)
@@ -76,3 +76,6 @@ edgelabels(round(allres$branch_length_deviation, 2), bg = "white", cex = 1.5, fr
 ```
 
 ![plot of chunk fig2_branchwise_dev.jpg](figures/fig2_branchwise_dev.jpg)
+
+Note that in this simple method to graph the results, the branches in the two plots above have been coloured by their rank, rather than their magnitude. 
+

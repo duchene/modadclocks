@@ -75,4 +75,4 @@ plot(tr, edge.col = rainbow(length(allres$branch_length_deviation), start = 4/6,
 edgelabels(round(allres$branch_length_deviation, 2), bg = "white", cex = 1.5, frame = "none")
 ```
 
-![plot of chunk fig2_branchwise_p.jpg](figures/fig2_branchwise_p.jpg)
+![plot of chunk fig2_branchwise_dev.jpg](figures/fig2_branchwise_dev.jpg)
