@@ -7,14 +7,14 @@ david.duchene[at]anu.edu.au
 
 sebastian.ducnene[at]sydney.edu.au
 
-19 May 2015
+21 May 2015
 
 Summary
 -------
 
-This repository was designed to assess the adequacy of clock and substitution models used in phylogenetics. It requires the posterior of trees and parameter estimates, and provides the substitution model adequacy, the overall (A index) and branch-wise clock model adequacy, the effect size of the branch wise adequacy, and the uncertainty in posterior predictive simulations.
+This repository was designed to assess the adequacy of clock and substitution models used in phylogenetics. It requires the posterior of trees and parameter estimates, and provides the substitution model adequacy, the overall (*A* index) and branch-wise clock model adequacy, the effect size of the branch wise adequacy, and the uncertainty in posterior predictive simulations.
 
-A flexible application for assessing clock model adequacy is being built. The present repository is specifically to accmpany the article; it is designed to test the clock model adequacy method on simulated data, so it is only suitable for the output of analyses from BEAST2 and a single gene partition. Clock models supported are the strict clock, the uncorrelated lognormal clock, and the random local clock. Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates.
+A flexible application for assessing clock model adequacy is being built. The present repository is specifically to accmpany the article; it is designed to test the clock model adequacy method on simulated data, so it is only suitable for the output of analyses from BEAST2 and a single gene partition. Clock models supported are the strict clock, the uncorrelated lognormal clock, and the random local clock. Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates with 4 discrete categories.
 
 The following are a set of examples of how to use the functions and how to present the results.
 
@@ -28,18 +28,18 @@ In this folder we also include the output log and tree files from BEAST 2, and t
 
 The following is example code to run and save the results for clock model adequacy after the BEAST 2 run has completed.
 
-Begin by opening R. The follwing will set the working directory to clock_modad in the cloned repository, and then source all the functions in the folder.
+Begin by opening R. The following will set the working directory to clock_modad in the cloned repository, and then source all the functions in the folder.
 
 ```coffee
 setwd("[INSERT THE PATH TO clock_modad]")
 for(i in dir()) source(i)
 ```
 
-Next, we set the directory to example_run_and_results, and run the function adeq(). This arguments for this function are the posterior of trees in nexus format, the log file, the alignment in nexus format, and the number of posterior predictive simulations to be performed.
+Next, we set the directory to example_run_and_results, and run the function adeq(). The arguments for this function are the posterior of trees in nexus format, the log file, the alignment in nexus format, and the number of posterior predictive simulations to be performed.
 
 ```coffee
 setwd("../example_run_and_results")
-clock_adequacy_example <- adeq("sim.trees", "sim.log", "al.nex", 100)
+clock_adequacy_example <- adeq(trees.file = "sim.trees", sim.log ="sim.log", empdat.file = "al.nex", Nsim = 100)
 names(clock_adequacy_example)
 ```
 
