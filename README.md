@@ -39,7 +39,7 @@ Next, we set the directory to example_run_and_results, and run the function adeq
 
 ```coffee
 setwd("../example_run_and_results")
-clock_adequacy_example <- adeq(trees.file = "sim.trees", sim.log ="sim.log", empdat.file = "al.nex", Nsim = 100)
+clock_adequacy_example <- adeq(trees.file = "sim.trees", log.file = "sim.log", empdat.file = "al.nex", Nsim = 100)
 names(clock_adequacy_example)
 ```
 
