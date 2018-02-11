@@ -1,4 +1,4 @@
-This repository was made to accompany the article 'Evaluating the adequacy of molecular-clock models using posterior predictive simulations'
+This repository was made to accompany the article '[Evaluating the adequacy of molecular-clock models using posterior predictive simulations](https://www.ncbi.nlm.nih.gov/pubmed/26163668)'
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 This repository was contributed by David Duchene and Sebastian Duchene
